@@ -53,23 +53,22 @@ function elements(root)
         end
 
         -- Descend depth first if possible
-        local depth = #values
-        local leaf = values[depth]
-        if 0 < #leaf then
-            keys[depth], values[depth+1] = 1, leaf[1]
-            return keys, leaf[1]
+        local depth = #keys + 1
+        local child = values[depth][1]
+        if child then
+            keys[depth], values[depth+1] = 1, child
+            return keys, child
         end
 
         while 1 < depth do
             -- Backtrack
-            values[depth] = nil
             depth = depth - 1
             -- Try next sibling
             local key = keys[depth] + 1
-            leaf = values[depth]
-            if key <= #leaf then
-                keys[depth], values[depth+1] = key, leaf[key]
-                return keys, leaf[key]
+            child = values[depth][key]
+            if child then
+                keys[depth], values[depth+1] = key, child
+                return keys, child
             end
             keys[depth] = nil
         end
